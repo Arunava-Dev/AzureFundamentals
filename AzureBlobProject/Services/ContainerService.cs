@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azure.Storage.Blobs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,13 @@ namespace AzureBlobProject.Services
 {
     public class ContainerService : IContainerService
     {
+        private readonly BlobServiceClient _blobClient;
+
+        public ContainerService(BlobServiceClient blobClient)
+        {
+            _blobClient = blobClient;
+        }
+
         public Task CreateContainer(string containerName)
         {
             throw new NotImplementedException();
