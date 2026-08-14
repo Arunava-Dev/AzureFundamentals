@@ -23,9 +23,10 @@ namespace AzureBlobProject.Services
             await blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
         }
 
-        public Task DeleteContainer(string containerName)
+        public async Task DeleteContainer(string containerName)
         {
-            throw new NotImplementedException();
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+            await blobContainerClient.DeleteIfExistsAsync();
         }
 
         public async Task<List<string>> GetAllContainer()
