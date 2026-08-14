@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,14 @@ namespace AzureBlobProject.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<string>> GetAllContainer()
+        public async Task<List<string>> GetAllContainer()
         {
-            throw new NotImplementedException();
+            List<string> containerName = new();
+            await foreach(BlobContainerItem blobContainerItem in _blobClient.GetBlobContainersAsync())
+            {
+                containerName.Add(blobContainerItem.Name);
+            }
+            return containerName;
         }
 
         public Task<List<string>> GetAllContainerAndBlobs()
