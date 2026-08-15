@@ -12,9 +12,10 @@ namespace AzureBlobProject.Controllers
             _containerService = containerService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var allContainer = await _containerService.GetAllContainer();
+            return View(allContainer);
         }
     }
 }
