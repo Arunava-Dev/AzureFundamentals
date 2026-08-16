@@ -29,5 +29,10 @@ namespace AzureBlobProject.Controllers
             await _containerService.CreateContainer(container.Name);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult>Delete(string containerName)
+        {
+            await _containerService.DeleteContainer(containerName);
+            return RedirectToAction("Index");
+        }
     }
 }
