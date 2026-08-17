@@ -1,9 +1,17 @@
-﻿using AzureBlobProject.Models;
+﻿using Azure.Storage.Blobs;
+using AzureBlobProject.Models;
 
 namespace AzureBlobProject.Services
 {
     public class BlobService : IBlobService
     {
+        private readonly BlobServiceClient _blobClient;
+
+        public BlobService(BlobServiceClient blobClient)
+        {
+            _blobClient = blobClient;
+        }
+
         public Task CreateBlob(string name, IFormFile file, string containerName, BlobModel model)
         {
             throw new NotImplementedException();
