@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using AzureBlobProject.Models;
 
 namespace AzureBlobProject.Services
@@ -12,9 +13,24 @@ namespace AzureBlobProject.Services
             _blobClient = blobClient;
         }
 
-        public Task CreateBlob(string name, IFormFile file, string containerName, BlobModel model)
+        public async Task<bool> CreateBlob(string name, IFormFile file, string containerName, BlobModel model)
         {
-            throw new NotImplementedException();
+            //to retrive the container
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+            var blobClient = blobContainerClient.GetBlobClient(name); //return the blob with the passing name
+
+            var httpHeaders = new BlobHttpHeaders()
+            {
+                ContentType = file.ContentType
+            };
+
+            var result = await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+
+            if(result != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteBlob(string name, string containerName)
