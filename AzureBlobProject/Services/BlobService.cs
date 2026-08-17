@@ -17,9 +17,12 @@ namespace AzureBlobProject.Services
             throw new NotImplementedException();
         }
 
-        public Task DeleteBlob(string name, string containerName)
+        public async Task<bool> DeleteBlob(string name, string containerName)
         {
-            throw new NotImplementedException();
+            //to retrive the container
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+            var blobClient = blobContainerClient.GetBlobClient(name); //return the blob with the passing name
+            return await blobClient.DeleteIfExistsAsync();
         }
 
         public async Task<List<string>> GetAllBlobs(string containerName)
@@ -41,9 +44,18 @@ namespace AzureBlobProject.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> GetBlob(string name, string containerName)
+        public async Task<string> GetBlob(string name, string containerName)
         {
-            throw new NotImplementedException();
+            //to retrive the container
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+
+            var blobClient = blobContainerClient.GetBlobClient(name); //return the blob with the passing name
+
+            if(blobClient != null)
+            {
+                return blobClient.Uri.AbsoluteUri;
+            }
+            return "";
         }
     }
 }
