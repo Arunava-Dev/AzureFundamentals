@@ -22,9 +22,18 @@ namespace AzureBlobProject.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<string>> GetAllBlobs(string containerName)
+        public async Task<List<string>> GetAllBlobs(string containerName)
         {
-            throw new NotImplementedException();
+            BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
+            var blobs = blobContainerClient.GetBlobsAsync();
+
+            List<string>blobNames = new List<string>();
+            await foreach (var blob in blobs)
+            {
+                blobNames.Add(blob.Name);
+            }
+
+            return blobNames;
         }
 
         public Task<List<BlobModel>> GetAllBlobsWithUri(string containerName)
