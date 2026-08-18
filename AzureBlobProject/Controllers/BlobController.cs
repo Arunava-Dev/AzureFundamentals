@@ -11,10 +11,11 @@ namespace AzureBlobProject.Controllers
         {
             _blobService = blobService;
         }
-
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Manage(string containerName)
         {
-            return View();
+            var blobsObj = await _blobService.GetAllBlobs(containerName);
+            return View(blobsObj);
         }
     }
 }
