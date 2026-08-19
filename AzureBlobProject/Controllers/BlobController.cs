@@ -36,9 +36,21 @@ namespace AzureBlobProject.Controllers
             var result = await _blobService.CreateBlob(fileName, file, containerName, new BlobModel());
 
             if(result)
-                return RedirectToAction("Index","Container");
+                return RedirectToAction("Manage",new {containerName});
 
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewFile(string name,string containerName)
+        {
+            return Redirect(await _blobService.GetBlob(name, containerName));
+        }
+     
+        public async Task<IActionResult> DeleteFile(string name, string containerName)
+        {
+            await _blobService.DeleteBlob(name, containerName);
+            return RedirectToAction("Manage", new { containerName });
+
         }
     }
 }
