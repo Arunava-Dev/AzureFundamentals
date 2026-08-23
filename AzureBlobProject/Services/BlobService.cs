@@ -13,7 +13,7 @@ namespace AzureBlobProject.Services
             _blobClient = blobClient;
         }
 
-        public async Task<bool> CreateBlob(string name, IFormFile file, string containerName, BlobModel model)
+        public async Task<bool> CreateBlob(string name, IFormFile file, string containerName, BlobModel blobmodel)
         {
             //to retrive the container
             BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(containerName);
@@ -24,7 +24,18 @@ namespace AzureBlobProject.Services
                 ContentType = file.ContentType
             };
 
-            var result = await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+
+            IDictionary<string, string> metaData = new Dictionary<string, string>();
+            if(!string.IsNullOrEmpty(blobmodel.Comment))
+            {
+                metaData.Add("title", blobmodel.Title);
+            }
+            if(!string.IsNullOrEmpty(blobmodel.Comment))
+            {
+                metaData.Add("comment", blobmodel.Comment);
+            }
+
+            var result = await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders,metaData);
 
             if(result != null)
             {
