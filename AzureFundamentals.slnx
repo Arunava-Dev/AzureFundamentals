@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="AzureBlobProject/AzureBlobProject.csproj" />
+  <Folder Name="/AzureBlobExample/">
+    <Project Path="AzureBlobProject/AzureBlobProject.csproj" />
+  </Folder>
 </Solution>
