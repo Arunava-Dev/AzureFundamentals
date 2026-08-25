@@ -8,10 +8,12 @@ namespace AzureBlobProject.Controllers
     public class HomeController : Controller
     {
         private readonly IContainerService _containerService;
+        private readonly IBlobService _blobService;
 
-        public HomeController(IContainerService containerService)
+        public HomeController(IContainerService containerService, IBlobService blobService)
         {
             _containerService = containerService;
+            _blobService = blobService;
         }
 
         public IActionResult Index()
@@ -19,9 +21,9 @@ namespace AzureBlobProject.Controllers
             return View(_containerService.GetAllContainerAndBlobs().GetAwaiter().GetResult());
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult>PrivateImages()
         {
-            return View();
+            return View(_blobService.GetAllBlobsWithUri("dotnetmastary-private").GetAwaiter().GetResult());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
