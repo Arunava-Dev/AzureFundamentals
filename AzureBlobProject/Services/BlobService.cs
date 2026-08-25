@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using AzureBlobProject.Models;
+using System.Collections;
 
 namespace AzureBlobProject.Services
 {
@@ -26,7 +27,7 @@ namespace AzureBlobProject.Services
 
 
             IDictionary<string, string> metaData = new Dictionary<string, string>();
-            if(!string.IsNullOrEmpty(blobmodel.Comment))
+            if(!string.IsNullOrEmpty(blobmodel.Title))
             {
                 metaData.Add("title", blobmodel.Title);
             }
@@ -36,6 +37,11 @@ namespace AzureBlobProject.Services
             }
 
             var result = await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders,metaData);
+
+            //IDictionary<string, string> removeMetaData = new Dictionary<string, string>();
+            //await blobClient.SetMetadataAsync(removeMetaData);
+           // metaData.Remove("title");
+           // await blobClient.SetMetadataAsync(metaData);
 
             if(result != null)
             {
