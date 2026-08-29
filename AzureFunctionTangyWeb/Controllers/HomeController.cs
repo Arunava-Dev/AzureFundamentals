@@ -25,7 +25,7 @@ namespace AzureFunctionTangyWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(SalesRequest salesRequest)
         {
-           
+            salesRequest.Id = Guid.NewGuid().ToString();
             using var client = _httpClientFactory.CreateClient(); //creates an HttpClient that MVC application can use to communicate with another application/ service over HTTP.
             client.BaseAddress = new Uri("http://localhost:7070/api/");   //Set the Azure Function's base URL
             using (var content = new StringContent(JsonConvert.SerializeObject(salesRequest), System.Text.Encoding.UTF8, "application/json"))
