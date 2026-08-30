@@ -1,7 +1,10 @@
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using TangyAzureFunc.Models;
 
 namespace TangyAzureFunc;
 
@@ -15,9 +18,14 @@ public class OnSalesUploadWriteToQueue
     }
 
     [Function("OnSalesUploadWriteToQueue")]
-    public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+    [QueueOutput("SalesRequestOutBound",Connection = "AzureWebJobsStorage")]
+    public async Task<SalesRequest> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
     {
+        //Read the JSON data sent in the HTTP request body and convert it into a string.
+        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        // Deserialize the JSON string back into a SalesRequest C# object so we can work with its properties.
+        SalesRequest data = JsonConvert.DeserializeObject<SalesRequest>(requestBody);
         _logger.LogInformation("C# HTTP trigger function processed a request.");
-        return new OkObjectResult("Welcome to Azure Functions!");
+        return data ?? new SalesRequest();
     }
 }
