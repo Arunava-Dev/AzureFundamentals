@@ -18,7 +18,7 @@ public class OnSalesUploadWriteToQueue
     }
 
     [Function("OnSalesUploadWriteToQueue")]
-    [QueueOutput("SalesRequestOutBound",Connection = "AzureWebJobsStorage")]
+    [QueueOutput("SalesRequestInBound",Connection = "AzureWebJobsStorage")]
     public async Task<SalesRequest> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
     {
         //Read the JSON data sent in the HTTP request body and convert it into a string.
@@ -29,3 +29,6 @@ public class OnSalesUploadWriteToQueue
         return data ?? new SalesRequest();
     }
 }
+// Return the SalesRequest object.
+// The QueueOutput binding automatically writes this returned object
+// as a message to the "SalesRequestOutBound" Azure Storage Queue.
