@@ -1,3 +1,5 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using AzureFunctionTangyWeb.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace AzureFunctionTangyWeb.Controllers
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly BlobServiceClient _blobServiceClient;
 
-        public HomeController(IHttpClientFactory httpClientFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, BlobServiceClient blobServiceClient)
         {
             _httpClientFactory = httpClientFactory;
+            _blobServiceClient = blobServiceClient;
         }
 
         public IActionResult Index()
@@ -23,7 +27,7 @@ namespace AzureFunctionTangyWeb.Controllers
         //http://localhost:7070/api/OnSalesUploadWriteToQueue
 
         [HttpPost]
-        public async Task<IActionResult> Index(SalesRequest salesRequest)
+        public async Task<IActionResult> Index(SalesRequest salesRequest,IFormFile file)
         {
             salesRequest.Id = Guid.NewGuid().ToString();
             using var client = _httpClientFactory.CreateClient(); //creates an HttpClient that MVC application can use to communicate with another application/ service over HTTP.
@@ -34,6 +38,23 @@ namespace AzureFunctionTangyWeb.Controllers
                 string returnValue = await response.Content.ReadAsStringAsync();
 
             }
+
+            if (file!=null)
+            {
+                var fileName = salesRequest.Id + Path.GetExtension(file.FileName);
+                BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient("functionsalesrep");
+                var blobClient = containerClient.GetBlobClient(fileName);
+
+                var httpheaders = new BlobHttpHeaders()
+                {
+                    ContentType = file.ContentType
+                };
+                await blobClient.UploadAsync(file.OpenReadStream(), httpheaders);
+            }
+
+            // retirive the container in our storage account
+
+         
 
             return RedirectToAction(nameof(Index));
            
