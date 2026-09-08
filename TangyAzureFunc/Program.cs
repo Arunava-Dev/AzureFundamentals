@@ -19,7 +19,7 @@ builder.ConfigureFunctionsWebApplication();
 //        .UseAzureMonitorExporter();
 //}
 
-string connectionString = Environment.GetEnvironmentVariable("SqlDatabase"); //retrive connection string
+string connectionString = Environment.GetEnvironmentVariable("AzureSqlDatabase"); //retrive connection string
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

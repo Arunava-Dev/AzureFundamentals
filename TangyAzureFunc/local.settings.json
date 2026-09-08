@@ -4,7 +4,7 @@
     "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=dotnetmasteryazuredemo96;AccountKey=qM0IwM7sDZORJq8sYY5KgMBEuuxijpLsLGSvkKLMsXpsHETqujwyNgFmGVPyAYXnzx9e+wNpkJws+AStXKPQRg==;EndpointSuffix=core.windows.net",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "SqlDatabase": "Server=MYNOTEBOOK;Database=AzureFundamentals;TrustServerCertificate=True;Trusted_Connection=True;",
+    //"SqlDatabase": "Server=MYNOTEBOOK;Database=AzureFundamentals;TrustServerCertificate=True;Trusted_Connection=True;",
     "AzureSqlDatabase": "Server=tcp:tempazuredemoserver1.database.windows.net,1433;Initial Catalog=tempAzureFundamentalDemo;Persist Security Info=False;User ID=sqladmin;Password=admin123#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
   }
