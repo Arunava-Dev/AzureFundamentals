@@ -6,4 +6,7 @@
     <Project Path="AzureFunctionTangyWeb/AzureFunctionTangyWeb.csproj" Id="ef308f2b-e5ec-4983-90e7-4460cf6b416a" />
     <Project Path="TangyAzureFunc/TangyAzureFunc.csproj" Id="2b47420d-9c03-4e0c-811d-ffc752cbc1bf" />
   </Folder>
+  <Folder Name="/AzureLogicAppExample/">
+    <Project Path="AzureSpookyLogic/AzureSpookyLogic.csproj" Id="dda672ec-4d91-4cab-8360-46f9a5922ccd" />
+  </Folder>
 </Solution>

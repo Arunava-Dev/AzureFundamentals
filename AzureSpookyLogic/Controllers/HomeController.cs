@@ -1,16 +1,55 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using AzureSpookyLogic.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace AzureSpookyLogic.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly BlobServiceClient _blobServiceClient;
+
+        public HomeController(IHttpClientFactory httpClientFactory, BlobServiceClient blobServiceClient)
+        {
+            _httpClientFactory = httpClientFactory;
+            _blobServiceClient = blobServiceClient;
+        }
         public IActionResult Index()
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Index(SpookyRequest spookyRequest, IFormFile file)
+        {
+            spookyRequest.Id = Guid.NewGuid().ToString();
+            using var client = _httpClientFactory.CreateClient(); //creates an HttpClient that MVC application can use to communicate with another application/ service over HTTP.
+            var json = JsonConvert.SerializeObject(spookyRequest);
+            using (var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"))
+            {
+                HttpResponseMessage response = await client.PostAsync("https://prod-14.centralindia.logic.azure.com:443/workflows/9cd33dd10efa4b05960f3f3c2f1968eb/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=OLnVIsiC4FHd-4PJrV95h0jALQ4Jrb7nO2tg9si1bC0", content);
+                string returnValue = await response.Content.ReadAsStringAsync();
 
+            }
+
+            if (file != null)
+            {
+                var fileName = spookyRequest.Id + Path.GetExtension(file.FileName);
+                BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient("logic-app-holder");
+                var blobClient = containerClient.GetBlobClient(fileName);
+
+                var httpheaders = new BlobHttpHeaders()
+                {
+                    ContentType = file.ContentType
+                };
+                await blobClient.UploadAsync(file.OpenReadStream(), httpheaders);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Privacy()
         {
             return View();
